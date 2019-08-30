@@ -30,7 +30,8 @@ export default new Router({
       name: 'found',
       component: () => import('./views/Found.vue'),
       meta: {
-        index: 1
+        index: 1,
+        keepAlive: true
       }
     },
     {
@@ -38,7 +39,8 @@ export default new Router({
       name: 'village',
       component: () => import('./views/Village.vue'),
       meta: {
-        index: 2
+        index: 2,
+        keepAlive: true
       }
     },
     {
@@ -46,7 +48,8 @@ export default new Router({
       name: 'video',
       component: () => import('./views/Video.vue'),
       meta: {
-        index: 3
+        index: 3,
+        keepAlive: true
       }
     },
     {
@@ -54,7 +57,8 @@ export default new Router({
       name: 'search',
       component: () => import('./views/Search.vue'),
       meta: {
-        index: 4
+        index: 4,
+        keepAlive: true
       }
     },
     {
@@ -79,6 +83,22 @@ export default new Router({
       component: () => import('./components/Player.vue'),
       meta: {
         index: 7
+      }
+    },
+    {
+      path: '/videoplayer',
+      name: 'videoplayer',
+      component: () => import('./views/Videoplayer.vue'),
+      meta: {
+        index: 6
+      }
+    },
+    {
+      path: '/commentList',
+      name: 'commentList',
+      component: () => import('./views/CommentList.vue'),
+      meta: {
+        index: 8
       }
     }
   ]

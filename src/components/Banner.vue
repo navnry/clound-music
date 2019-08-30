@@ -2,10 +2,9 @@
   <div class="banner">
     <div class="swiper-container">
       <div class="swiper-wrapper">
-        <div class="swiper-slide" v-for="item in banners" :key="item.index">
-          <img :src="item.pic" alt="">
-          <span :style="{'background-color':item.titleColor}">{{item.typeTitle}}</span>
-          <!--<span :style="color=item.titleColor">{{item.typeTitle}}</span>-->
+        <div class="swiper-slide" v-for="banners in bannersArr" :key="banners.index">
+          <img :src="banners.pic" alt="">
+          <span :style="{'background-color':banners.titleColor}">{{banners.typeTitle}}</span>
         </div>
       </div>
       <div class="swiper-pagination swiper-pagination-white"></div>
@@ -15,36 +14,37 @@
 
 <script>
   import Swiper from 'swiper'
+  import { androidBanner } from '@/request/api'
 
   export default {
     name: 'Banner',
     data () {
       return {
         fs: 0,
-        banners: []
+        bannersArr: []
       }
     },
     mounted () {
       this.fs = parseInt(document.getElementById('html').style.fontSize) / 100
-      this.$axios({
-        method: 'get',
-        url: 'http://localhost:3000/banner',
-        params: {
-          type: 1
-        }
-      }).then(res => {
-        this.banners = res.data.banners
-        this.$nextTick(function () {
-          this.initSwiper()
-        })
-      })
+      this._getBanners()
     },
     methods: {
+      _getBanners () {
+        androidBanner({
+          type: 1
+        }).then(res => {
+          console.log(res.banners)
+          this.bannersArr = res.banners
+          this.$nextTick(function () {
+            this.initSwiper()
+          })
+        })
+      },
       initSwiper () {
         new Swiper('.banner .swiper-container', {
           speed: 600,
           spaceBetween: this.fs * 34,
-          loop:true,
+          loop: true,
           autoplay: {
             delay: 5000,
             disableOnInteraction: false

@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="recommond-list-top-share">
-        <div>
+        <div @click="toCommentList(listData.id)">
           <i class="iconfont icon-pinglun"></i>
           <span> {{listData.commentCount}}</span>
         </div>
@@ -64,12 +64,11 @@
 
 <script>
   import Goback from '@/components/Goback'
+  import { playListDetail, songDetail } from '@/request/api'
 
   export default {
     name: 'recommondList',
-    components: {
-      Goback
-    },
+    components: { Goback },
     data () {
       return {
         listId: '',
@@ -83,18 +82,16 @@
     },
     methods: {
       getDetail () {
-        this.$axios({
-          method: 'get',
-          url: 'http://localhost:3000/playlist/detail',
-          params: {
-            id: this.listId
-          }
+        //获取歌单信息
+        playListDetail({
+          id: this.listId
         }).then(res => {
-          // console.log(res.data.playlist)
-          this.listData = res.data.playlist
+          console.log(res.playlist)
+          this.listData = res.playlist
+          console.log(res.playlist)
           let ids = []
-          for (let i in res.data.playlist.tracks) {
-            ids[i] = (res.data.playlist.tracks)[i].id
+          for (let i in res.playlist.tracks) {
+            ids[i] = (res.playlist.tracks)[i].id
           }
           this.$nextTick(function () {
             this.getList(ids.toString())
@@ -104,22 +101,23 @@
 
         })
       },
+
+      //获取歌单的歌曲列表
       getList (ids) {
-        this.$axios({
-          method: 'get',
-          url: 'http://localhost:3000/song/detail',
-          params: {
-            ids: ids
-          }
+        songDetail({
+          ids: ids
         }).then(res => {
-          if (res.data.code == 200) {
-            this.songList = res.data.songs
-            console.log(res.data.songs)
+          if (res.code == 200) {
+            this.songList = res.songs
           }
         })
       },
+      // 跳转播放
       goToPlay (id) {
         this.$router.push(`/player?id=${id}`)
+      },
+      toCommentList(id){
+        this.$router.push(`/commentList?id=${id}`)
       }
     }
   }
@@ -143,10 +141,9 @@
 
       .recommond-list-top-content {
         position: relative;
-        z-index: 1;
+        z-index: 2;
         height: 2.2rem;
         display: flex;
-        /*margin-top: .7rem;*/
         margin-bottom: .1rem;
 
         .recommond-list-coverimg {
@@ -201,22 +198,41 @@
         }
       }
 
-      .recommond-list-top-bg {
-        width: 100%;
-        height: 100%;
+      .recommond-list-top-bg, .recommond-list-top-bg::after {
         position: absolute;
-        top: 0;
         left: 0;
-        background-size: cover;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+      }
+
+      .recommond-list-top-bg {
         background-repeat: no-repeat;
+        background-size: cover;
         background-position: 50%;
-        -webkit-filter: blur(.2rem);
-        filter: blur(.2rem);
+        -webkit-filter: blur(20px);
+        filter: blur(20px);
         -webkit-transform: scale(1.5);
         -ms-transform: scale(1.5);
         transform: scale(1.5);
-        z-index: 0;
       }
+
+      .recommond-list-top-bg::after {
+        content: "";
+        background-color: rgba(0, 0, 0, .25);
+      }
+
+      /*::after {*/
+      /*content: "";*/
+      /*background-color: rgba(0, 0, 0, .25);*/
+      /*position: absolute;*/
+      /*left: 0;*/
+      /*top: 0;*/
+      /*right: 0;*/
+      /*bottom: 0;*/
+      /*z-index: 1;*/
+      /*}*/
 
       .recommond-list-top-share {
         height: 1rem;
@@ -224,6 +240,7 @@
         align-items: center;
         padding: .1rem 0;
         position: relative;
+        z-index: 2;
 
         div {
           width: 25%;
@@ -257,6 +274,7 @@
       position: relative;
       top: -.4rem;
       padding-top: .3rem;
+      z-index: 2;
       /*box-shadow: 0 0 0 1px hsla(0, 0%, 100%, .3) inset, 0 .5em 1em rgba(0, 0, 0, 0.6);*/
 
       ul {

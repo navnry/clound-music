@@ -1,7 +1,7 @@
 <template>
   <div class="video">
     <ul class="video-list" v-infinite-scroll="load" style="overflow:auto">
-      <li v-for="item in videoList" class="video-list-item">{{ item }}</li>
+      <li v-for="item in videoList" class="video-list-item" @click="toMv(item.id)">{{ item }}</li>
     </ul>
     <p v-if="loading">加载中...</p>
     <p v-if="noMore">没有更多了</p>
@@ -36,7 +36,10 @@
         })
       },
       load () {
-        console.log(1)
+
+      },
+      toMv(id){
+        this.$router.push(`/videoplayer?id=${id}`)
       }
     }
   }

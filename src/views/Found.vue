@@ -41,12 +41,27 @@
             </div>
           </div>
         </div>
+        <div class="list-name">
+          <span>新碟</span>
+        </div>
+        <div class="list-wrap">
+          <div class="list-item" v-for="item in albumSheetList" :key="item.id" @click="albumSheetList(item.id)">
+            <div class="list-item-pic">
+              <img :src="item.picUrl" alt="">
+              <span>{{parseInt((item.playCount)/10000)}}万</span>
+            </div>
+            <div class="list-item-txt">
+              <p>{{item.name}}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
   import Banner from '@/components/Banner'
+  import { recommondSheet, albumSheet } from '@/request/api'
 
   export default {
     name: 'found',
@@ -55,28 +70,34 @@
     },
     data () {
       return {
-        recmonSongList: []
+        recmonSongList: [],
+        albumSheetList: []
       }
     },
     mounted () {
       this.getRecmonSongList()
-
+      this.getAlbumSheet()
     },
     methods: {
       getRecmonSongList () {
-        this.$axios({
-          method: 'get',
-          url: 'http://localhost:3000/personalized',
-          params: {
-            limit: 6
-          }
+        recommondSheet({
+          limit: 6
         }).then(res => {
-          this.recmonSongList = res.data.result
-          console.log(res.data.result)
+          this.recmonSongList = res.result
         })
       },
       toRecommondList (id) {
         this.$router.push(`/recommondList?id=${id}`)
+      },
+
+      getAlbumSheet () {
+        albumSheet({
+          limit: 3
+        }).then(res => {
+          console.log(res)
+          console.log(res.albums)
+          this.albumSheetList=res.albums
+        })
       }
     }
   }
@@ -98,7 +119,7 @@
       padding-top: .2rem;
 
       .list-item {
-        width: 2.16rem;
+        width: 2.22rem;
         margin-bottom: .2rem;
 
         .list-item-pic {

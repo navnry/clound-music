@@ -17,7 +17,6 @@
     },
     mounted () {
       this.songsId = this.$route.query.id
-      console.log(this.songsId)
       this.playMusic()
     },
     methods: {

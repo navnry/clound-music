@@ -2,7 +2,12 @@
   <div id="app">
     <Tabbar></Tabbar>
     <transition :name="transitionName">
-      <router-view class="childView"/>
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive"></router-view>
+      </keep-alive>
+    </transition>
+    <transition :name="transitionName">
+      <router-view v-if="!$route.meta.keepAlive"></router-view>
     </transition>
   </div>
 </template>
